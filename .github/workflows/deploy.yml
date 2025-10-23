@@ -18,8 +18,10 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.SERVER_KEY }}
 
-    - name: Deploy via SSH
-      run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "\
-          cd /var/www/nav-page && git reset --hard && git pull origin main \
-        "
+   - name: Deploy via SSH
+  run: |
+    ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+    ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "\
+      cd /var/www/nav-page && git reset --hard && git pull origin main \
+    "
+
