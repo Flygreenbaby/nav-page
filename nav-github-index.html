@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>我的导航 - 个人主页</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="个人博客导航页" />
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --bg-color-light: #1e293b;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.2);
+      --text-main: #e5e7eb;
+      --text-sub: #9ca3af;
+      --card-bg: rgba(15, 23, 42, 0.7);
+      --border-soft: rgba(148, 163, 184, 0.2);
+      --radius-lg: 18px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.8);
+      --transition-fast: 0.18s ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #0f172a 0, #020617 35%, #000 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      padding: 16px;
+    }
+
+    .app {
+      max-width: 1120px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 18px;
+    }
+
+    /* 左侧个人信息卡片 */
+
+    .sidebar {
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.9));
+      border-radius: var(--radius-lg);
+      padding: 22px 22px 18px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      position: sticky;
+      top: 16px;
+      height: fit-content;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .avatar {
+      width: 68px;
+      height: 68px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, #38bdf8, #6366f1);
+      padding: 2px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .avatar-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 20px;
+      background: #020617;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 26px;
+      letter-spacing: 1px;
+      color: #e5e7eb;
+    }
+
+    .avatar-status-dot {
+      position: absolute;
+      right: 6px;
+      bottom: 6px;
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px #020617;
+    }
+
+    .profile-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .profile-name {
+      font-size: 1.15rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .profile-name span.badge {
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.18);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #bae6fd;
+    }
+
+    .profile-desc {
+      margin-top: 6px;
+      font-size: 0.86rem;
+      color: var(--text-sub);
+      line-height: 1.5;
+    }
+
+    .profile-meta {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 0.78rem;
+      color: #9ca3af;
+    }
+
+    .meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+    .meta-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .time-block {
+      margin-top: 8px;
+      padding: 10px 10px 9px;
+      border-radius: 12px;
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.15), transparent 55%);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      font-size: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .time-label {
+      color: var(--text-sub);
+    }
+
+    .time-value {
+      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      letter-spacing: 0.03em;
+    }
+
+    .quote {
+      padding: 10px 11px;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px dashed rgba(148, 163, 184, 0.4);
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      line-height: 1.5;
+    }
+
+    .quote strong {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    .social-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .social-item {
+      font-size: 0.8rem;
+      padding: 6px 8px;
+      text-align: center;
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-sub);
+      text-decoration: none;
+      transition: background var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast), color var(--transition-fast);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .social-item:hover {
+      border-color: rgba(56, 189, 248, 0.7);
+      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.18), rgba(15, 23, 42, 0.95));
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.9);
+      transform: translateY(-1px);
+      color: #e5e7eb;
+    }
+
+    .footer-text {
+      margin-top: 6px;
+      text-align: center;
+      font-size: 0.7rem;
+      color: #6b7280;
+    }
+
+    /* 右侧内容区域 */
+
+    .main {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      border-radius: var(--radius-lg);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .header-title {
+      font-size: 1.02rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-title span.dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.8);
+    }
+
+    .header-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .search-input {
+      position: relative;
+      width: 190px;
+      max-width: 42vw;
+    }
+
+    .search-input input {
+      width: 100%;
+      padding: 7px 10px 7px 26px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(15, 23, 42, 0.85);
+      color: var(--text-main);
+      font-size: 0.78rem;
+      outline: none;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+    }
+
+    .search-input input::placeholder {
+      color: #6b7280;
+    }
+
+    .search-input span.icon {
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.7rem;
+      color: #6b7280;
+    }
+
+    .search-input input:focus {
+      border-color: rgba(56, 189, 248, 0.7);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.3);
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .theme-toggle {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+      background: rgba(15, 23, 42, 0.9);
+      color: #e5e7eb;
+    }
+
+    .theme-toggle:hover {
+      border-color: rgba(56, 189, 248, 0.8);
+      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.18), rgba(15, 23, 42, 0.96));
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.9);
+      transform: translateY(-1px);
+    }
+
+    /* 分类标签栏 */
+
+    .tabs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 2px 4px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      background: rgba(15, 23, 42, 0.96);
+      width: fit-content;
+      margin-top: 2px;
+    }
+
+    .tab {
+      position: relative;
+      padding: 4px 12px;
+      font-size: 0.78rem;
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      color: var(--text-sub);
+      cursor: pointer;
+      transition: color var(--transition-fast), transform var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    .tab-indicator {
+      position: absolute;
+      z-index: -1;
+      top: 2px;
+      bottom: 2px;
+      border-radius: 999px;
+      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.22), rgba(15, 23, 42, 0.96));
+      border: 1px solid rgba(56, 189, 248, 0.7);
+      transition: transform 0.18s ease-out, width 0.18s ease-out;
+    }
+
+    /* 链接宫格 */
+
+    .section-card {
+      padding: 16px 16px 14px;
+      border-radius: var(--radius-lg);
+      background: rgba(15, 23, 42, 0.94);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow: 0 18px 35px rgba(15, 23, 42, 0.9);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .section-title span.badge {
+      font-size: 0.65rem;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: #9ca3af;
+    }
+
+    .section-subtitle {
+      font-size: 0.78rem;
+      color: var(--text-sub);
+    }
+
+    .link-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+      gap: 10px;
+    }
+
+    .link-item {
+      position: relative;
+      padding: 9px 9px 8px;
+      border-radius: 14px;
+      background: var(--card-bg);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast), translate var(--transition-fast);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      overflow: hidden;
+    }
+
+    .link-item::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.25), transparent 55%);
+      opacity: 0;
+      transition: opacity var(--transition-fast);
+      pointer-events: none;
+    }
+
+    .link-item:hover {
+      transform: translateY(-2px);
+      border-color: rgba(56, 189, 248, 0.7);
+      box-shadow: 0 16px 32px rgba(15, 23, 42, 0.95);
+      background: rgba(15, 23, 42, 0.98);
+    }
+
+    .link-item:hover::before {
+      opacity: 1;
+    }
+
+    .link-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .link-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 9px;
+      background: radial-gradient(circle at 20% 0, rgba(248, 250, 252, 0.6), rgba(15, 23, 42, 0.9));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: #e5e7eb;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      flex-shrink: 0;
+    }
+
+    .link-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .link-title {
+      font-size: 0.85rem;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .link-url {
+      font-size: 0.72rem;
+      color: #6b7280;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .link-tags {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+      color: #6b7280;
+      gap: 6px;
+    }
+
+    .tag-list {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .tag {
+      padding: 1px 5px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      font-size: 0.7rem;
+      color: #9ca3af;
+    }
+
+    .link-badge {
+      padding: 1px 5px;
+      border-radius: 999px;
+      border: 1px solid rgba(34, 197, 94, 0.6);
+      color: #bbf7d0;
+      background: rgba(22, 163, 74, 0.12);
+      font-size: 0.7rem;
+      white-space: nowrap;
+    }
+
+    .empty-tip {
+      font-size: 0.8rem;
+      color: #6b7280;
+      padding: 6px 2px 0;
+    }
+
+    /* 响应式 */
+
+    @media (max-width: 860px) {
+      body {
+        align-items: flex-start;
+      }
+
+      .app {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .sidebar {
+        position: static;
+        order: -1;
+      }
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 12px;
+      }
+
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .header-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .search-input {
+        width: 100%;
+        max-width: none;
+      }
+    }
+
+    /* 简单的“浅色模式” */
+
+    body.light {
+      background: radial-gradient(circle at top, #e0f2fe 0, #f9fafb 35%, #e5e7eb 100%);
+    }
+
+    body.light .sidebar,
+    body.light .header,
+    body.light .section-card {
+      background: rgba(255, 255, 255, 0.9);
+      border-color: rgba(148, 163, 184, 0.35);
+    }
+
+    body.light .link-item {
+      background: rgba(255, 255, 255, 0.9);
+      border-color: rgba(148, 163, 184, 0.35);
+    }
+
+    body.light .link-item:hover {
+      background: #f9fafb;
+      box-shadow: 0 16px 32px rgba(15, 23, 42, 0.18);
+    }
+
+    body.light .social-item {
+      background: #f3f4f6;
+    }
+
+    body.light .social-item:hover {
+      background: #e5f3ff;
+    }
+
+    body.light .quote {
+      background: #f9fafb;
+      border-style: dashed;
+    }
+
+    body.light .section-subtitle,
+    body.light .profile-desc,
+    body.light .profile-meta,
+    body.light .time-label,
+    body.light .link-url,
+    body.light .tag,
+    body.light .section-title span.badge {
+      color: #4b5563;
+    }
+
+    body.light .footer-text {
+      color: #6b7280;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <!-- 左侧：个人信息 -->
+    <aside class="sidebar">
+      <div class="profile">
+        <div class="avatar">
+          <div class="avatar-inner">FG</div>
+          <span class="avatar-status-dot"></span>
+        </div>
+        <div class="profile-main">
+          <div class="profile-name">
+            Flygreenbaby
+            <span class="badge">Personal Blog</span>
+          </div>
+          <p class="profile-desc">
+            记录学习、生活与折腾的地方。热爱前端、开源和一切有趣的小东西。
+          </p>
+          <div class="profile-meta">
+            <span class="meta-item">
+              <span class="meta-dot"></span> 中国 · UTC+8
+            </span>
+            <span class="meta-item">Coding / Reading / Thinking</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="time-block">
+        <span class="time-label">当前时间</span>
+        <span class="time-value" id="clock">--:--:--</span>
+      </div>
+
+      <div class="quote" id="quote">
+        <strong>每日一言：</strong> 正在加载中...
+      </div>
+
+      <div>
+        <div style="font-size:0.82rem;margin-bottom:6px;color:#9ca3af;">社交链接</div>
+        <div class="social-list">
+          <a class="social-item" href="https://github.com/Flygreenbaby" target="_blank" rel="noopener noreferrer">
+            GitHub
+          </a>
+          <a class="social-item" href="https://flygreenbaby.github.io" target="_blank" rel="noopener noreferrer">
+            Blog
+          </a>
+          <a class="social-item" href="mailto:you@example.com">
+            Email
+          </a>
+          <a class="social-item" href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+            Twitter
+          </a>
+          <a class="social-item" href="https://space.bilibili.com" target="_blank" rel="noopener noreferrer">
+            Bilibili
+          </a>
+          <a class="social-item" href="javascript:void(0)" onclick="alert('可以在这里放微信二维码等信息')">
+            WeChat
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-text">
+        © <span id="year"></span> Flygreenbaby · Made with HTML + CSS + JS
+      </div>
+    </aside>
+
+    <!-- 右侧：导航内容 -->
+    <main class="main">
+      <header class="header">
+        <div class="header-left">
+          <div class="header-title">
+            <span class="dot"></span>
+            个人导航页
+          </div>
+          <div class="header-subtitle">
+            常用网站、个人项目、学习资源，一站直达。
+          </div>
+          <div class="tabs" id="tabs">
+            <!-- 指示器元素，会被 JS 定位 -->
+            <div class="tab-indicator" id="tab-indicator"></div>
+
+            <button class="tab active" data-category="all">全部</button>
+            <button class="tab" data-category="blog">博客 & 主页</button>
+            <button class="tab" data-category="dev">开发 & 工具</button>
+            <button class="tab" data-category="study">学习 & 文档</button>
+            <button class="tab" data-category="fun">娱乐 & 其它</button>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="search-input">
+            <span class="icon">🔍</span>
+            <input type="text" id="search" placeholder="搜索站点 / 关键字..." autocomplete="off" />
+          </div>
+          <button class="theme-toggle" id="theme-toggle" title="切换浅色/深色">
+            🌙
+          </button>
+        </div>
+      </header>
+
+      <section class="section-card">
+        <div class="section-header">
+          <div class="section-title">
+            常用导航
+            <span class="badge">
+              <span id="count-all">0</span> 个站点
+            </span>
+          </div>
+          <div class="section-subtitle" id="filter-info">
+            当前：全部分类
+          </div>
+        </div>
+
+        <div class="link-grid" id="link-grid">
+          <!-- JS 动态填充 -->
+        </div>
+
+        <div class="empty-tip" id="empty-tip" style="display:none;">
+          没有找到匹配的站点，可以尝试换个关键词或分类。
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // ---------------------------
+    // 导航数据配置区
+    // ---------------------------
+    const LINK_DATA = [
+      // 博客 & 主页
+      {
+        title: "个人博客",
+        url: "https://flygreenbaby.github.io",
+        displayUrl: "flygreenbaby.github.io",
+        icon: "📓",
+        category: "blog",
+        tags: ["随笔", "技术", "生活"],
+        badge: "推荐",
+      },
+      {
+        title: "GitHub 主页",
+        url: "https://github.com/Flygreenbaby",
+        displayUrl: "github.com/Flygreenbaby",
+        icon: "🐙",
+        category: "blog",
+        tags: ["开源", "代码"],
+      },
+      {
+        title: "Gitee 主页",
+        url: "https://gitee.com",
+        displayUrl: "gitee.com",
+        icon: "🐧",
+        category: "blog",
+        tags: ["镜像", "代码托管"],
+      },
+
+      // 开发 & 工具
+      {
+        title: "GitHub",
+        url: "https://github.com",
+        displayUrl: "github.com",
+        icon: "💻",
+        category: "dev",
+        tags: ["代码托管", "开源"],
+      },
+      {
+        title: "Stack Overflow",
+        url: "https://stackoverflow.com",
+        displayUrl: "stackoverflow.com",
+        icon: "🧠",
+        category: "dev",
+        tags: ["问答", "Bug"],
+      },
+      {
+        title: "MDN Web Docs",
+        url: "https://developer.mozilla.org",
+        displayUrl: "developer.mozilla.org",
+        icon: "📚",
+        category: "dev",
+        tags: ["前端", "文档"],
+      },
+      {
+        title: "CodePen",
+        url: "https://codepen.io",
+        displayUrl: "codepen.io",
+        icon: "✏️",
+        category: "dev",
+        tags: ["前端", "Demo"],
+      },
+
+      // 学习 & 文档
+      {
+        title: "菜鸟教程",
+        url: "https://www.runoob.com",
+        displayUrl: "runoob.com",
+        icon: "🥕",
+        category: "study",
+        tags: ["入门", "教程"],
+      },
+      {
+        title: "掘金",
+        url: "https://juejin.cn",
+        displayUrl: "juejin.cn",
+        icon: "🪙",
+        category: "study",
+        tags: ["技术社区", "文章"],
+      },
+      {
+        title: "CSDN",
+        url: "https://www.csdn.net",
+        displayUrl: "csdn.net",
+        icon: "📝",
+        category: "study",
+        tags: ["博客", "技术"],
+      },
+
+      // 娱乐 & 其它
+      {
+        title: "Bilibili",
+        url: "https://www.bilibili.com",
+        displayUrl: "bilibili.com",
+        icon: "🎬",
+        category: "fun",
+        tags: ["视频", "学习"],
+      },
+      {
+        title: "YouTube",
+        url: "https://www.youtube.com",
+        displayUrl: "youtube.com",
+        icon: "▶️",
+        category: "fun",
+        tags: ["视频", "学习"],
+      },
+      {
+        title: "网易云音乐",
+        url: "https://music.163.com",
+        displayUrl: "music.163.com",
+        icon: "🎵",
+        category: "fun",
+        tags: ["音乐", "放松"],
+      },
+    ];
+
+    // 每日一句（可自行扩展）
+    const QUOTES = [
+      "先做到“能用”，再追求“优雅”。",
+      "写给未来的自己看的代码，从现在就开始写清楚。",
+      "持续的小进步，会带来巨大的变化。",
+      "别着急，把该做的做好，其余的交给时间。",
+      "真正的成长，是学会与问题长期共存。",
+    ];
+
+    // ---------------------------
+    // DOM 引用
+    // ---------------------------
+    const clockEl = document.getElementById("clock");
+    const yearEl = document.getElementById("year");
+    const quoteEl = document.getElementById("quote");
+    const linkGridEl = document.getElementById("link-grid");
+    const emptyTipEl = document.getElementById("empty-tip");
+    const countAllEl = document.getElementById("count-all");
+    const filterInfoEl = document.getElementById("filter-info");
+    const searchInputEl = document.getElementById("search");
+    const tabsContainerEl = document.getElementById("tabs");
+    const tabIndicatorEl = document.getElementById("tab-indicator");
+    const themeToggleEl = document.getElementById("theme-toggle");
+
+    // ---------------------------
+    // 初始化
+    // ---------------------------
+    let currentCategory = "all";
+    let currentKeyword = "";
+
+    function initClock() {
+      function updateClock() {
+        const now = new Date();
+        const hh = String(now.getHours()).padStart(2, "0");
+        const mm = String(now.getMinutes()).padStart(2, "0");
+        const ss = String(now.getSeconds()).padStart(2, "0");
+        clockEl.textContent = hh + ":" + mm + ":" + ss;
+      }
+      updateClock();
+      setInterval(updateClock, 1000);
+    }
+
+    function initYear() {
+      yearEl.textContent = new Date().getFullYear();
+    }
+
+    function initQuote() {
+      const index = Math.floor(Math.random() * QUOTES.length);
+      quoteEl.innerHTML =
+        "<strong>每日一言：</strong> " + QUOTES[index];
+    }
+
+    function createLinkItem(link) {
+      const a = document.createElement("a");
+      a.className = "link-item";
+      a.href = link.url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+
+      // Top
+      const top = document.createElement("div");
+      top.className = "link-top";
+
+      const icon = document.createElement("div");
+      icon.className = "link-icon";
+      icon.textContent = link.icon || "🔗";
+
+      const main = document.createElement("div");
+      main.className = "link-main";
+
+      const title = document.createElement("div");
+      title.className = "link-title";
+      title.textContent = link.title;
+
+      const url = document.createElement("div");
+      url.className = "link-url";
+      url.textContent = link.displayUrl || link.url.replace(/^https?:\/\//, "");
+
+      main.appendChild(title);
+      main.appendChild(url);
+
+      top.appendChild(icon);
+      top.appendChild(main);
+
+      // Bottom tags
+      const tags = document.createElement("div");
+      tags.className = "link-tags";
+
+      const tagList = document.createElement("div");
+      tagList.className = "tag-list";
+
+      if (Array.isArray(link.tags)) {
+        link.tags.forEach((t) => {
+          const span = document.createElement("span");
+          span.className = "tag";
+          span.textContent = t;
+          tagList.appendChild(span);
+        });
+      }
+
+      tags.appendChild(tagList);
+
+      if (link.badge) {
+        const badge = document.createElement("span");
+        badge.className = "link-badge";
+        badge.textContent = link.badge;
+        tags.appendChild(badge);
+      }
+
+      a.appendChild(top);
+      a.appendChild(tags);
+
+      return a;
+    }
+
+    function renderLinks() {
+      linkGridEl.innerHTML = "";
+
+      const keyword = currentKeyword.trim().toLowerCase();
+
+      const filtered = LINK_DATA.filter((item) => {
+        const matchCategory =
+          currentCategory === "all" || item.category === currentCategory;
+        if (!matchCategory) return false;
+
+        if (!keyword) return true;
+
+        const text =
+          (item.title || "") +
+          " " +
+          (item.displayUrl || item.url || "") +
+          " " +
+          (item.tags || []).join(" ");
+        return text.toLowerCase().includes(keyword);
+      });
+
+      filtered.forEach((item) => {
+        linkGridEl.appendChild(createLinkItem(item));
+      });
+
+      countAllEl.textContent = LINK_DATA.length;
+
+      if (filtered.length === 0) {
+        emptyTipEl.style.display = "block";
+      } else {
+        emptyTipEl.style.display = "none";
+      }
+
+      const categoryTextMap = {
+        all: "全部分类",
+        blog: "博客 & 主页",
+        dev: "开发 & 工具",
+        study: "学习 & 文档",
+        fun: "娱乐 & 其它",
+      };
+
+      let info = "当前：" + (categoryTextMap[currentCategory] || "全部分类");
+      if (keyword) {
+        info += " · 搜索关键词：\"" + keyword + "\"";
+      }
+      filterInfoEl.textContent = info;
+    }
+
+    function initTabs() {
+      const tabs = Array.from(
+        tabsContainerEl.querySelectorAll(".tab")
+      );
+
+      function updateIndicator() {
+        const active = tabsContainerEl.querySelector(".tab.active");
+        if (!active) return;
+
+        const rect = active.getBoundingClientRect();
+        const parentRect = tabsContainerEl.getBoundingClientRect();
+        const left = rect.left - parentRect.left;
+        const width = rect.width;
+
+        tabIndicatorEl.style.transform = "translateX(" + left + "px)";
+        tabIndicatorEl.style.width = width + "px";
+      }
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          tabs.forEach((t) => t.classList.remove("active"));
+          tab.classList.add("active");
+          currentCategory = tab.dataset.category || "all";
+          renderLinks();
+          updateIndicator();
+        });
+      });
+
+      // 初始时定位指示器（等一帧，确保布局完成）
+      window.addEventListener("load", () => {
+        setTimeout(updateIndicator, 50);
+      });
+      window.addEventListener("resize", () => {
+        setTimeout(updateIndicator, 50);
+      });
+    }
+
+    function initSearch() {
+      let timer = null;
+      searchInputEl.addEventListener("input", () => {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+          currentKeyword = searchInputEl.value;
+          renderLinks();
+        }, 150);
+      });
+    }
+
+    function initTheme() {
+      const saved = localStorage.getItem("nav-theme");
+      if (saved === "light") {
+        document.body.classList.add("light");
+        themeToggleEl.textContent = "☀️";
+      }
+
+      themeToggleEl.addEventListener("click", () => {
+        const isLight = document.body.classList.toggle("light");
+        themeToggleEl.textContent = isLight ? "☀️" : "🌙";
+        localStorage.setItem("nav-theme", isLight ? "light" : "dark");
+      });
+    }
+
+    // ---------------------------
+    // 入口
+    // ---------------------------
+    (function main() {
+      initClock();
+      initYear();
+      initQuote();
+      initTabs();
+      initSearch();
+      initTheme();
+      renderLinks();
+    })();
+  </script>
+</body>
+
+</html>
